@@ -1,0 +1,31 @@
+.mainHead{
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.subHead{
+    text-align: center;
+}
+
+.exchangeBtnP{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.exchangeName{
+    text-align: center;
+}
+
+.btcDataPeriod{
+    width: 28%;
+    display: flex;
+    margin-top: -40px;
+    justify-content: space-evenly;
+    float: right;
+}
+
+.table{
+    margin-top: 76px;
+}
