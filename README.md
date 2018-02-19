@@ -5,5 +5,6 @@
  - Install dependencies by runing command: <code> yarn install </code>
  - Start app by <code> yarn start </code>
 
+Crypto exchange app on react
 
  - To make production built, run command <code> yarn run build </code>
