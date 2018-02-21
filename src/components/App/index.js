@@ -9,15 +9,30 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { exchangeName: "", BTCLastPriceBinance: "", BTCLastPriceBittrex: "", BTCLastPriceCryptoPia: "" };
-
+    this.state = {
+      exchangeName: "",
+      BTCLastPriceBinance: "",
+      BTCLastPriceBittrex: "",
+      BTCLastPriceCryptoPia: "",
+      BTCLastPriceGDax: "",
+      BTCLastPriceBitfinex: "",
+      BTCLastPriceKraken: "",
+      BTCLastPricePoloniex: "",
+      BTCLastBidBinance: "",
+      BTCLastBidBittrex: "",
+      BTCLastBidCryptoPia: "",
+      BTCLastBidGDax: "",
+      BTCLastBidBitfinex: "",
+      BTCLastBidKraken: "",
+      BTCLastBidPoloniex: "",
+    };
   }
 
   componentDidMount() {
     let data = {
       labels: ["12am-3am", "3am-6am", "6am-9am", "9am-12pm",
         "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am"],
-  
+
       datasets: [
         {
           title: "Some Data",
@@ -33,42 +48,41 @@ class App extends Component {
         }
       ]
     };
-  
+
     let chart = new Chart({
       parent: "#chart", // or a DOM element
       title: "My Awesome Chart",
       data: data,
       type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
       height: 250,
-  
+
       colors: ['#7cd6fd', 'violet', 'blue'],
       // hex-codes or these preset colors;
       // defaults (in order):
       // ['light-blue', 'blue', 'violet', 'red',
       // 'orange', 'yellow', 'green', 'light-green',
       // 'purple', 'magenta', 'grey', 'dark-grey']
-  
+
       format_tooltip_x: d => (d + '').toUpperCase(),
       format_tooltip_y: d => d + ' pts'
     });
     // super(props);
     const exchangeBinance = new ccxt.binance();
-    const symbolBinance = 'BTC/USDT'
+    const symbolBinance = 'ETH/BTC'
+    console.log(exchangeBinance)
     exchangeBinance.apiKey = '123';
     exchangeBinance.secret = '123';
-    console.log(exchangeBinance);
     this.setState({ exchangeName: "Binance" });
     exchangeBinance.fetchTicker(symbolBinance).then(ticker => {
+      console.log(ticker);
       const text = [
         exchangeBinance.id,
         symbolBinance,
         JSON.stringify(ticker, undefined, '\n\t')
       ]
-      console.log(ticker)
       let data = JSON.parse(text[2]);
       data['info']['lastPrice']
-      console.log(data['info']['lastPrice']);
-      this.setState({ BTCLastPriceBinance: data['info']['lastPrice'] });
+      this.setState({ BTCLastPriceBinance: data['info']['lastPrice'], BTCLastBidBinance: data['info']['bidPrice'] });
       // document.getElementById('content').innerHTML = text.join(' ')
     })
 
@@ -76,7 +90,6 @@ class App extends Component {
     const symbolBittrex = 'BTC/USDT'
     exchangeBittrex.apiKey = '123';
     exchangeBittrex.secret = '123';
-    console.log(exchangeBittrex);
     this.setState({ exchangeName: "Binance" });
     exchangeBittrex.fetchTicker(symbolBittrex).then(ticker => {
       const text = [
@@ -84,11 +97,8 @@ class App extends Component {
         symbolBittrex,
         JSON.stringify(ticker, undefined, '\n\t')
       ]
-      console.log(ticker)
       let data = JSON.parse(text[2]);
-      data['info']['lastPrice']
-      console.log(data['info']['lastPrice']);
-      this.setState({ BTCLastPriceBittrex: data['last'] });
+      this.setState({ BTCLastPriceBittrex: data['last'], BTCLastBidBittrex: data['bid'] });
       // document.getElementById('content').innerHTML = text.join(' ')
     })
 
@@ -97,7 +107,6 @@ class App extends Component {
     const symbolcryptopia = 'BTC/USDT'
     exchangeCryptopia.apiKey = '123';
     exchangeCryptopia.secret = '123';
-    console.log(exchangeCryptopia);
     this.setState({ exchangeName: "Binance" });
     exchangeCryptopia.fetchTicker(symbolcryptopia).then(ticker => {
       const text = [
@@ -105,13 +114,71 @@ class App extends Component {
         symbolcryptopia,
         JSON.stringify(ticker, undefined, '\n\t')
       ]
-      console.log(ticker)
       let data = JSON.parse(text[2]);
       data['info']['lastPrice']
-      console.log(data['info']['lastPrice']);
-      this.setState({ BTCLastPriceCryptoPia: data['last'] });
+      this.setState({ BTCLastPriceCryptoPia: data['last'], BTCLastBidCryptoPia: data['bid'] });
       // document.getElementById('content').innerHTML = text.join(' ')
     })
+
+
+    const exchangDax = new ccxt.gdax();
+    const symbolgDax = 'BTC/USD'
+    exchangDax.apiKey = '123';
+    exchangDax.secret = '123';
+    this.setState({ exchangeName: "Binance" });
+    exchangDax.fetchTicker(symbolgDax).then(ticker => {
+      const text = [
+        exchangDax.id,
+        symbolgDax,
+        JSON.stringify(ticker, undefined, '\n\t')
+      ]
+
+      this.setState({ BTCLastPriceGDax: ticker['last'],BTCLastBidGDax: ticker['bid'] });
+    })
+
+    const exchangBitfinex = new ccxt.bitfinex();
+    const symbolBitfinex = 'BTC/USD'
+    exchangBitfinex.apiKey = '123';
+    exchangBitfinex.secret = '123';
+    this.setState({ exchangeName: "Binance" });
+    exchangBitfinex.fetchTicker(symbolBitfinex).then(ticker => {
+      const text = [
+        exchangBitfinex.id,
+        symbolBitfinex,
+        JSON.stringify(ticker, undefined, '\n\t')
+      ]
+      this.setState({ BTCLastPriceBitfinex: ticker['last'], BTCLastBidBitfinex: ticker['bid'] });
+    })
+
+    const exchangKaraken = new ccxt.kraken();
+    const symbolKaraken = 'BTC/USD'
+    exchangKaraken.apiKey = '123';
+    exchangKaraken.secret = '123';
+    this.setState({ exchangeName: "Binance" });
+    exchangKaraken.fetchTicker(symbolKaraken).then(ticker => {
+      const text = [
+        exchangKaraken.id,
+        symbolKaraken,
+        JSON.stringify(ticker, undefined, '\n\t')
+      ]
+      this.setState({ BTCLastPriceKraken: ticker['last'], BTCLastBidKraken: ticker['bid'] });
+    })
+
+    const exchangPoloniex = new ccxt.poloniex();
+    const symbolPoloniex = 'BTC/USD'
+    exchangPoloniex.apiKey = '123';
+    exchangPoloniex.secret = '123';
+    this.setState({ exchangeName: "Binance" });
+    exchangPoloniex.fetchTicker(symbolPoloniex).then(ticker => {
+      const text = [
+        exchangPoloniex.id,
+        symbolPoloniex,
+        JSON.stringify(ticker, undefined, '\n\t')
+      ]
+      this.setState({ BTCLastPricePoloniex: ticker['last'], BTCLastBidPoloniex: ticker['bid'] });
+    })
+
+
   }
 
   binance = () => {
@@ -129,9 +196,7 @@ class App extends Component {
       ]
       console.log(ticker)
       let data = JSON.parse(text[2]);
-      data['info']['lastPrice']
-      console.log(data['info']['lastPrice']);
-      this.setState({ BTCLastPriceBinance: data['info']['lastPrice'] });
+      this.setState({ BTCLastPriceBinance: data['info']['lastPrice'], BTCLastBidBinance: data['info']['bidPrice'] });
       // document.getElementById('content').innerHTML = text.join(' ')
 
       let dataa = {
@@ -179,7 +244,7 @@ class App extends Component {
       //   symbol,
       //   JSON.stringify(ticker, undefined, '\n\t')
       // ]
-      this.setState({ BTCLastPriceBittrex: ticker.last });
+      this.setState({ BTCLastPriceBittrex: ticker['last'], BTCLastBidBittrex: ticker['bid'] });
       console.log(ticker)
       // console.log(JSON.parse(text))
       // let data = JSON.parse(text[2]);
@@ -227,7 +292,7 @@ class App extends Component {
     console.log(exchange)
     this.setState({ exchangeName: "CryptoPia" });
     exchange.fetchTicker(symbol).then(ticker => {
-      this.setState({ BTCLastPriceCryptoPia: ticker.last });
+      this.setState({ BTCLastPriceCryptoPia: ticker['last'], BTCLastBidCryptoPia: ticker['bid'] });
       let dataa = {
         labels: ["BitCoin"],
         datasets: [
@@ -258,6 +323,161 @@ class App extends Component {
     })
   }
 
+  gdax = () => {
+    const exchange = new ccxt.gdax();
+    const symbol = 'BTC/USD'
+    exchange.apiKey = '';
+    exchange.secret = '';
+    console.log(exchange)
+    this.setState({ exchangeName: "Gdax" });
+    exchange.fetchTicker(symbol).then(ticker => {
+      this.setState({ BTCLastPriceGDax: ticker.last,BTCLastBidGDax: ticker['bid'] });
+      let dataa = {
+        labels: ["BitCoin"],
+        datasets: [
+          {
+            title: "Some Data", color: "light-blue",
+            values: [ticker.last]
+          }
+        ]
+      };
+      new Chart({
+        parent: "#chart", // or a DOM element
+        title: "My Awesome Chart",
+        data: dataa,
+        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+        height: 250,
+
+        colors: ['#7cd6fd', 'violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+      });
+
+    })
+  }
+
+  bitfinex = () => {
+    const exchange = new ccxt.bitfinex();
+    const symbol = 'BTC/USD'
+    exchange.apiKey = '';
+    exchange.secret = '';
+    this.setState({ exchangeName: "Gdax" });
+    exchange.fetchTicker(symbol).then(ticker => {
+      this.setState({ BTCLastPriceBitfinex: ticker['last'], BTCLastBidBitfinex: ticker['bid'] });
+      let dataa = {
+        labels: ["BitCoin"],
+        datasets: [
+          {
+            title: "Some Data", color: "light-blue",
+            values: [ticker.last]
+          }
+        ]
+      };
+      new Chart({
+        parent: "#chart", // or a DOM element
+        title: "My Awesome Chart",
+        data: dataa,
+        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+        height: 250,
+
+        colors: ['#7cd6fd', 'violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+      });
+
+    })
+  }
+
+
+  kraken = () => {
+    const exchange = new ccxt.kraken();
+    const symbol = 'BTC/USD'
+    exchange.apiKey = '';
+    exchange.secret = '';
+    this.setState({ exchangeName: "Gdax" });
+    exchange.fetchTicker(symbol).then(ticker => {
+      this.setState({ BTCLastPriceKraken: ticker['last'], BTCLastBidKraken: ticker['bid'] });
+      let dataa = {
+        labels: ["BitCoin"],
+        datasets: [
+          {
+            title: "Some Data", color: "light-blue",
+            values: [ticker.last]
+          }
+        ]
+      };
+      new Chart({
+        parent: "#chart", // or a DOM element
+        title: "My Awesome Chart",
+        data: dataa,
+        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+        height: 250,
+
+        colors: ['#7cd6fd', 'violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+      });
+
+    })
+  }
+
+  poloniex = () => {
+    const exchange = new ccxt.poloniex();
+    const symbol = 'BTC/USD'
+    exchange.apiKey = '';
+    exchange.secret = '';
+    this.setState({ exchangeName: "Gdax" });
+    exchange.fetchTicker(symbol).then(ticker => {
+      this.setState({ BTCLastPricePoloniex: ticker['last'], BTCLastBidPoloniex: ticker['bid']});
+      let dataa = {
+        labels: ["BitCoin"],
+        datasets: [
+          {
+            title: "Some Data", color: "light-blue",
+            values: [ticker.last]
+          }
+        ]
+      };
+      new Chart({
+        parent: "#chart", // or a DOM element
+        title: "My Awesome Chart",
+        data: dataa,
+        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+        height: 250,
+
+        colors: ['#7cd6fd', 'violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+      });
+
+    })
+  }
+
+
   render() {
     return (
       <div>
@@ -279,6 +499,7 @@ class App extends Component {
               <th>#</th>
               <th>Exchanges</th>
               <th>Price</th>
+              <th>Bid</th>
               <th>View</th>
             </tr>
           </thead>
@@ -287,19 +508,50 @@ class App extends Component {
               <td>1</td>
               <td>Binance</td>
               <td>{this.state.BTCLastPriceBinance}</td>
-              <td>          <Button bsStyle="primary" onClick={() => this.binance()}>Bitcoin Binance</Button></td>
+              <td>{this.state.BTCLastBidBinance}</td>
+              <td><Button bsStyle="primary" onClick={() => this.binance()}>Bitcoin Binance</Button></td>
             </tr>
             <tr>
               <td>2</td>
               <td>Bittrex</td>
               <td>{this.state.BTCLastPriceBittrex}</td>
+              <td>{this.state.BTCLastBidBittrex}</td>
               <td><Button bsStyle="primary" onClick={() => this.bittrex()}>Bitcoin Bittrex</Button></td>
             </tr>
             <tr>
               <td>3</td>
               <td>CryptoPia</td>
               <td>{this.state.BTCLastPriceCryptoPia}</td>
+              <td>{this.state.BTCLastBidCryptoPia}</td>
               <td><Button bsStyle="primary" onClick={() => this.cryptopia()}>Bitcoin CryptoPia</Button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>GDax</td>
+              <td>{this.state.BTCLastPriceGDax}</td>
+              <td>{this.state.BTCLastBidGDax}</td>
+              <td><Button bsStyle="primary" onClick={() => this.gdax()}>Bitcoin GDax</Button></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Bitfinex</td>
+              <td>{this.state.BTCLastPriceBitfinex}</td>
+              <td>{this.state.BTCLastBidBitfinex}</td>
+              <td><Button bsStyle="primary" onClick={() => this.bitfinex()}>Bitcoin Bitfinex</Button></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Karaken</td>
+              <td>{this.state.BTCLastPriceKraken}</td>
+              <td>{this.state.BTCLastBidKraken}</td>
+              <td><Button bsStyle="primary" onClick={() => this.kraken()}>Bitcoin Kraken</Button></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Poloniex</td>
+              <td>{this.state.BTCLastPricePoloniex}</td>
+              <td>{this.state.BTCLastBidPoloniex}</td>
+              <td><Button bsStyle="primary" onClick={() => this.poloniex()}>Bitcoin Poloniex</Button></td>
             </tr>
           </tbody>
         </Table>;
@@ -310,7 +562,7 @@ class App extends Component {
           <Button bsStyle="success" >1 Week</Button>
           <Button bsStyle="success" >1 Month</Button>
         </div> */}
-      
+
         <div id="chart"></div>
       </div>);
   }

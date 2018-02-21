@@ -6,6 +6,8 @@
   "author": "Mohsin <mmohsinkhalid@outlook.com>",
   "license": "MIT",
   "dependencies": {
+    "ccxt": "^1.10.1166",
+    "frappe-charts": "0.0.8",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.2.0",
