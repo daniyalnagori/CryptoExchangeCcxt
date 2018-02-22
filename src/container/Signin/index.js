@@ -12,7 +12,7 @@ class Login extends Component {
 
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
-        console.log(123)
+        console.log(123);
     }
 
     loginSubmit = (user) => {

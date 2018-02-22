@@ -9,3 +9,13 @@ export const SIGNIN_FAILURE = 'SIGNIN_FAILURE'
 export const LOGOUT = 'LOGOUT'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
+
+
+export const BTCDATA = 'BTCDATA'
+export const BTCDATA_SUCCESS = 'BTCDATA_SUCCESS'
+export const BTCDATA_FAILURE = 'BTCDATA_FAILURE'
+
+
+export const BTCGET = 'BTCGET'
+export const BTCGET_SUCCESS = 'BTCGET_SUCCESS'
+export const BTCGET_FAILURE = 'BTCGET_FAILURE'

@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import ccxt from 'ccxt';
 import Chart from "frappe-charts/dist/frappe-charts.min.esm";
+// import LineChart from './charts/LineChart';
+
 import './index.css';
 import { Button, Table } from 'react-bootstrap';
+import { btcAction } from "../../store/actions/index";
+import { btcReducer } from "../../store";
+import { connect } from 'react-redux';
+
 class App extends Component {
-
-
-
+  btcDtaArr = []
   constructor(props) {
     super(props);
     this.state = {
@@ -28,47 +32,13 @@ class App extends Component {
     };
   }
 
+
   componentDidMount() {
-    let data = {
-      labels: ["12am-3am", "3am-6am", "6am-9am", "9am-12pm",
-        "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am"],
 
-      datasets: [
-        {
-          title: "Some Data",
-          values: [25, 40, 30, 35, 8, 52, 17, -4]
-        },
-        {
-          title: "Another Set",
-          values: [25, 50, -10, 15, 18, 32, 27, 14]
-        },
-        {
-          title: "Yet Another",
-          values: [15, 20, -3, -15, 58, 12, -17, 37]
-        }
-      ]
-    };
 
-    let chart = new Chart({
-      parent: "#chart", // or a DOM element
-      title: "My Awesome Chart",
-      data: data,
-      type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
-      height: 250,
-
-      colors: ['#7cd6fd', 'violet', 'blue'],
-      // hex-codes or these preset colors;
-      // defaults (in order):
-      // ['light-blue', 'blue', 'violet', 'red',
-      // 'orange', 'yellow', 'green', 'light-green',
-      // 'purple', 'magenta', 'grey', 'dark-grey']
-
-      format_tooltip_x: d => (d + '').toUpperCase(),
-      format_tooltip_y: d => d + ' pts'
-    });
     // super(props);
     const exchangeBinance = new ccxt.binance();
-    const symbolBinance = 'ETH/BTC'
+    const symbolBinance = 'BTC/USDT'
     console.log(exchangeBinance)
     exchangeBinance.apiKey = '123';
     exchangeBinance.secret = '123';
@@ -104,7 +74,7 @@ class App extends Component {
 
 
     const exchangeCryptopia = new ccxt.cryptopia();
-    const symbolcryptopia = 'BTC/USDT'
+    const symbolcryptopia = 'BTC/USDT';
     exchangeCryptopia.apiKey = '123';
     exchangeCryptopia.secret = '123';
     this.setState({ exchangeName: "Binance" });
@@ -133,7 +103,7 @@ class App extends Component {
         JSON.stringify(ticker, undefined, '\n\t')
       ]
 
-      this.setState({ BTCLastPriceGDax: ticker['last'],BTCLastBidGDax: ticker['bid'] });
+      this.setState({ BTCLastPriceGDax: ticker['last'], BTCLastBidGDax: ticker['bid'] });
     })
 
     const exchangBitfinex = new ccxt.bitfinex();
@@ -177,8 +147,9 @@ class App extends Component {
       ]
       this.setState({ BTCLastPricePoloniex: ticker['last'], BTCLastBidPoloniex: ticker['bid'] });
     })
-
-
+    // setInterval(() => {
+    //   this.props.btcData({ title: 'daniyal', isDone: false });
+    // }, 10000);
   }
 
   binance = () => {
@@ -263,6 +234,7 @@ class App extends Component {
         ]
       };
 
+
       new Chart({
         parent: "#chart", // or a DOM element
         title: "My Awesome Chart",
@@ -331,7 +303,7 @@ class App extends Component {
     console.log(exchange)
     this.setState({ exchangeName: "Gdax" });
     exchange.fetchTicker(symbol).then(ticker => {
-      this.setState({ BTCLastPriceGDax: ticker.last,BTCLastBidGDax: ticker['bid'] });
+      this.setState({ BTCLastPriceGDax: ticker.last, BTCLastBidGDax: ticker['bid'] });
       let dataa = {
         labels: ["BitCoin"],
         datasets: [
@@ -400,7 +372,6 @@ class App extends Component {
     })
   }
 
-
   kraken = () => {
     const exchange = new ccxt.kraken();
     const symbol = 'BTC/USD'
@@ -446,7 +417,7 @@ class App extends Component {
     exchange.secret = '';
     this.setState({ exchangeName: "Gdax" });
     exchange.fetchTicker(symbol).then(ticker => {
-      this.setState({ BTCLastPricePoloniex: ticker['last'], BTCLastBidPoloniex: ticker['bid']});
+      this.setState({ BTCLastPricePoloniex: ticker['last'], BTCLastBidPoloniex: ticker['bid'] });
       let dataa = {
         labels: ["BitCoin"],
         datasets: [
@@ -477,8 +448,55 @@ class App extends Component {
     })
   }
 
-
   render() {
+    // setTimeout(() => {
+    if (this.props.btcReducer.authUser.length) {
+      this.props.btcReducer.authUser
+        .map((data) => {
+          this.btcDtaArr.push(data['BTCLastPriceBinance'])
+        })
+    }
+    if (this.props.btcReducer.authUser.length) {
+
+      let data = {
+        labels: ["12am-3am", "3am-6am", "6am-9am", "9am-12pm",
+          "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am"],
+
+        datasets: [
+          {
+            title: "Some Data",
+            values: this.btcDtaArr
+          },
+          // {
+          //   title: "Another Set",
+          //   values:
+          // },
+          // {
+          //   title: "Yet Another",
+          //   values: [15, 20, -3, -15, 58, 12, -17, 37]
+          // }
+        ]
+      };
+      console.log('0-0-0-0')
+      let chart = new Chart({
+        parent: "#chart", // or a DOM element
+        title: "My Awesome Chart",
+        data: data,
+        type: 'LineChart', // or 'line', 'scatter', 'pie', 'percentage'
+        height: 250,
+
+        colors: ['#7cd6fd', 'violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+      });
+    }
+    // }, 10000);
     return (
       <div>
         <h1 className="mainHead">Arbitrage Trading System</h1>
@@ -564,9 +582,23 @@ class App extends Component {
         </div> */}
 
         <div id="chart"></div>
+
+        <button type="button" onClick={this.props.btcData.bind(this, { title: 'daniyal', isDone: false })}>Click me</button>
+
+        <button type="button" onClick={this.props.btcGet.bind(this)}>Click messss</button>
       </div>);
   }
 
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return { userAuth: state.AuthReducer, btcReducer: state.btcReducer };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    btcData: (userObj) => dispatch(btcAction.btcData(userObj)),
+    btcGet: () => dispatch(btcAction.btcGet())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
