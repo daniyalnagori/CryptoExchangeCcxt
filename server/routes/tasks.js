@@ -33,17 +33,30 @@ router.post('/task', function (req, res, next) {
     exchangeBinance.secret = '123';
     exchangeBinance.fetchTicker(symbolBinance).then(ticker => {
 
+        
         // console.log(ticker['info']['lastPrice'])
         var task = req.body;
 
         const exchangeBittrex = new ccxt.bittrex();
-        const symbolBittrex = 'BTC/USDT'
+        const symbolBittrex = 'ETH/USDT'
         exchangeBittrex.apiKey = '123';
         exchangeBittrex.secret = '123';
         exchangeBittrex.fetchTicker(symbolBittrex).then(ticker => {
             task['BTCLastPriceBittrex'] = ticker['last'];
-            console.log(ticker['last']);
         })
+
+
+        const exchangeKraken = new ccxt.kraken();
+        const symbolKraken = 'BTC/USD'
+        exchangeKraken.apiKey = '123';
+        exchangeKraken.secret = '123';
+        exchangeKraken.fetchTicker(symbolKraken).then(ticker => {
+            console.log('ticker---',ticker)
+            task['BTCLastPriceKraken'] = ticker['last'];
+        }).catch((err) => {
+            console.log(err)
+        })
+
 
 
         task['BTCLastPriceBinance'] = ticker['info']['lastPrice']
@@ -63,7 +76,7 @@ router.post('/task', function (req, res, next) {
                     }
                     res.json(task);
                 });
-            }, 2000);
+            }, 5000);
         }
     })
 })

@@ -10,7 +10,9 @@ import { btcReducer } from "../../store";
 import { connect } from 'react-redux';
 
 class App extends Component {
-  btcDtaArr = []
+  btcDtaBinanceArr = [];
+  btcDtaBittrexArr = [];
+  btcDtaKrakenArr = [];
   constructor(props) {
     super(props);
     this.state = {
@@ -453,48 +455,55 @@ class App extends Component {
     if (this.props.btcReducer.authUser.length) {
       this.props.btcReducer.authUser
         .map((data) => {
-          this.btcDtaArr.push(data['BTCLastPriceBinance'])
+          
+          this.btcDtaBinanceArr.push(data['BTCLastPriceBinance']);
+          this.btcDtaBittrexArr.push(data['BTCLastPriceBittrex']);
+          this.btcDtaKrakenArr.push(data['BTCLastPriceKraken']);
+          if (this.props.btcReducer.authUser.length) {
+            let dataBinance = this.btcDtaBinanceArr.slice(52,70);
+            let dataBittrex = this.btcDtaBittrexArr.slice(52,70);
+            let dataKraken = this.btcDtaKrakenArr.slice(52,70)
+            let data = {
+              labels: ["12am-3am", "3am-6am", "6am-9am", "9am-12pm",
+                "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am", "9pm-12am", "9pm-12am", "9pm-12am","12am-3am", "3am-6am", "6am-9am", "9am-12pm",
+                "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am", "9pm-12am", "9pm-12am", "9pm-12am"],
+      
+              datasets: [
+                {
+                  title: "Binance Bitcoin",
+                  values: dataBinance,
+                  color: 'red',
+                },
+                {
+                  title: "Bittrex Bitcoin",
+                  values: dataBittrex
+                },
+                {
+                  title: "Kraken Bitcoin",
+                  values: dataKraken
+                }
+              ]
+            };
+            console.log('0-0-0-0')
+            let chart = new Chart({
+              parent: "#chart", // or a DOM element
+              title: "My Awesome Chart",
+              data: data,
+              type: 'line', // or 'line', 'scatter', 'pie', 'percentage'
+              height: 250,
+      
+              colors: ['#7cd6fd', 'violet', 'red'],
+              // hex-codes or these preset colors;
+              // defaults (in order):
+              // ['light-blue', 'blue', 'violet', 'red',
+              // 'orange', 'yellow', 'green', 'light-green',
+              // 'purple', 'magenta', 'grey', 'dark-grey']
+      
+              format_tooltip_x: d => (d + '').toUpperCase(),
+              format_tooltip_y: d => d + ' pts'
+            });
+          }
         })
-    }
-    if (this.props.btcReducer.authUser.length) {
-
-      let data = {
-        labels: ["12am-3am", "3am-6am", "6am-9am", "9am-12pm",
-          "12pm-3pm", "3pm-6pm", "6pm-9pm", "9pm-12am"],
-
-        datasets: [
-          {
-            title: "Some Data",
-            values: this.btcDtaArr
-          },
-          // {
-          //   title: "Another Set",
-          //   values:
-          // },
-          // {
-          //   title: "Yet Another",
-          //   values: [15, 20, -3, -15, 58, 12, -17, 37]
-          // }
-        ]
-      };
-      console.log('0-0-0-0')
-      let chart = new Chart({
-        parent: "#chart", // or a DOM element
-        title: "My Awesome Chart",
-        data: data,
-        type: 'LineChart', // or 'line', 'scatter', 'pie', 'percentage'
-        height: 250,
-
-        colors: ['#7cd6fd', 'violet', 'blue'],
-        // hex-codes or these preset colors;
-        // defaults (in order):
-        // ['light-blue', 'blue', 'violet', 'red',
-        // 'orange', 'yellow', 'green', 'light-green',
-        // 'purple', 'magenta', 'grey', 'dark-grey']
-
-        format_tooltip_x: d => (d + '').toUpperCase(),
-        format_tooltip_y: d => d + ' pts'
-      });
     }
     // }, 10000);
     return (
